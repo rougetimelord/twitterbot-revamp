@@ -1,6 +1,7 @@
 import sys
 import tweepy
 import time
+import csv
 
 consumer_key = "<FILL IN>"
 consumer_secret = "<FILL IN>"
@@ -15,24 +16,30 @@ twitters_to_rt = ["SkinDotTrade", "skinhub", "SteamAnalyst", "CSGO500",
 words_to_rt = ["giveaway", "contest", "enter", "rt"]
 blocked_words = ["thank", "winning", "congrats"]
 
+done = []
+
 num_entered = 0
 
 def retweet(id):
-        success = False
-        fails = 0
-        while success  == False:
-            try:
-                r = api.retweet(id);
-                if r.retweeted == "True":
-                    success = True
-                    num_entered += 1
-            except tweepy.TweepError as e:
-                fails += 1
-                if fails >= 5 or e.api_code == 327:
-                    print(e)
-                    print("Really failed retweeting")
-                    success = True
-                time.sleep(10)
+    if id in done:
+        return ''
+    success = False
+    fails = 0
+    while success  == False:
+        try:
+            r = api.retweet(id);
+            if r.retweeted == "True":
+                success = True
+                num_entered += 1
+                done.append(id)
+        except tweepy.TweepError as e:
+            fails += 1
+            if fails >= 5 or e.api_code == 327:
+                print(e)
+                print("Really failed retweeting")
+                success = True
+                done.append(id)
+            time.sleep(10)
 
 def uni_norm(text):
     return text.translate({ 0x2018:0x27, 0x2019:0x27, 0x201C:0x22, 0x201D:0x22,
@@ -54,6 +61,12 @@ def getNewestTweets(user):
         retweet(id)
 
 def startTweeting():
+    with open('done_list.csv', 'r') as f:
+        reader = csv.reader(f)
+        if len(list(reader)) > 0:
+            done = list(reader)[0]
+
+    
     print("Starting bot")
     run = 0
     while 1 >= 0:
@@ -62,7 +75,15 @@ def startTweeting():
             getNewestTweets(user)
         run += 1
         print("Entered %s contests on run %s, now sleeping for an hour" % (num_entered, run))
-        time.sleep(3600)
+        for i in range(3600):
+            try:
+                sleep(1)
+            except KeyboardInterrupt as e:
+                with open('done_list.csv', 'w', newline='') as file:
+                    w = csv.writer(file)
+                    w.truncate()
+                    w.writerow(done)
+                sys.exit()
 
 if __name__ == '__main__':
     startTweeting()
