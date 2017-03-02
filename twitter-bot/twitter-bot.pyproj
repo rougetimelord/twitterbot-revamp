@@ -5,7 +5,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>b2f38831-9379-490b-9939-2b8595967c27</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>twitter_bot.py</StartupFile>
+    <StartupFile>twitter_bot_filled.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -23,6 +23,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="twitter_bot.py" />
+    <Compile Include="twitter_bot_filled.py" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
