@@ -12,6 +12,7 @@ api = tweepy.API(auth)
 
 twitters_to_rt = ["SkinDotTrade", "skinhub", "SteamAnalyst"]
 words_to_rt = ["giveaway", "contest", "enter", "rt"]
+blocked_words = ["thank", "winning", "congrats"]
 
 num_entered = 0
 
@@ -42,7 +43,7 @@ def getNewestTweets(user):
     told_user = False
     for tweet in api.user_timeline(screen_name = user,count=20):
         text = uni_norm(tweet.text).lower()
-        if any(x in text for x in words_to_rt) and 'thank' not in text:
+        if any(x in text for x in words_to_rt) and not any(y in text for y in blocked_words):
             rt.append(tweet.id_str)
             if 'reply' in text and told_user == False:
                 told_user = True
