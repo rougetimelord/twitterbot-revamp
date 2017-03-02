@@ -74,6 +74,8 @@ def startTweeting():
         for i in range(3600):
             try:
                 time.sleep(1)
+                if i % 300 == 0:
+                    print("5 minutes passed")
             except KeyboardInterrupt as e:
                 os.remove('done_list.csv')
                 with open('done_list.csv', 'w', newline='') as file:
