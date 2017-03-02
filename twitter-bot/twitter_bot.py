@@ -10,7 +10,8 @@ auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(access_key, access_secret)
 api = tweepy.API(auth)
 
-twitters_to_rt = ["SkinDotTrade", "skinhub", "SteamAnalyst"]
+twitters_to_rt = ["SkinDotTrade", "skinhub", "SteamAnalyst", "CSGO500", 
+    "CSGOatsecom", "Society_gg"]
 words_to_rt = ["giveaway", "contest", "enter", "rt"]
 blocked_words = ["thank", "winning", "congrats"]
 
@@ -41,7 +42,7 @@ def getNewestTweets(user):
     tweets = []
     rt = []
     told_user = False
-    for tweet in api.user_timeline(screen_name = user,count=20):
+    for tweet in api.user_timeline(screen_name = user,count=5):
         text = uni_norm(tweet.text).lower()
         if any(x in text for x in words_to_rt) and not any(y in text for y in blocked_words):
             rt.append(tweet.id_str)
