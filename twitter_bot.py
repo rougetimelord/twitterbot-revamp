@@ -14,7 +14,7 @@ api = tweepy.API(auth)
 twitters_to_rt = ["SkinDotTrade", "skinhub", "SteamAnalyst", "CSGO500", 
     "CSGOatsecom", "Society_gg"]
 words_to_rt = ["giveaway", "contest", "enter", "rt"]
-blocked_words = ["thank", "winning", "congrats"]
+blocked_words = ["thank", "winning", "congrats", "winner of"]
 
 num_entered = 0
 
@@ -49,22 +49,26 @@ def getNewestTweets(user, done):
             continue
         tweet_text = uni_norm(tweet.text).lower()
         done.append(tweet_id)
-        if any(x in tweet_text for x in words_to_rt) and not any(y in tweet_text for y in blocked_words):
+        if any(x in tweet_text for x in words_to_rt):   
+            if any(y in tweet_text for y in blocked_words):
+                continue
             retweet(tweet_id)
             if 'reply' in tweet_text and told_user == False:
                 told_user = True
                 print('Check @%s for a reply entry' % user)
 
 def startTweeting():
-    print("Starting bot")
+    print('Loading processed tweets')
     with open('done_list.csv', 'r') as f:
         reader = csv.reader(f)
         temp = list(reader)
         if len(temp) > 0:
             done = temp[0]
 
+    print("Starting bot")
     run = 0
     while 1 >= 0:
+        print("Running run %s" % run)
         num_entered = 0
         for user in twitters_to_rt:
             getNewestTweets(user, done)
@@ -74,7 +78,7 @@ def startTweeting():
         for i in range(3600):
             try:
                 time.sleep(1)
-                if i % 300 == 0:
+                if i % 300 == 0 and not i == 0:
                     print("5 minutes passed")
             except KeyboardInterrupt as e:
                 os.remove('done_list.csv')
