@@ -45,7 +45,6 @@ def getNewestTweets(user, done):
     for tweet in api.user_timeline(screen_name = user,count = 5,exclude_replies='true',include_rts='false'):
         tweet_id = tweet.id_str
         if tweet_id in done:
-            print("Skipping %s" % tweet.id_str)
             continue
         tweet_text = uni_norm(tweet.text).lower()
         done.append(tweet_id)
@@ -53,7 +52,7 @@ def getNewestTweets(user, done):
             if any(y in tweet_text for y in blocked_words):
                 continue
             retweet(tweet_id)
-            if 'reply' in tweet_text and told_user == False:
+            if any(z in tweet_text for z in ['reply', 'tag']) and told_user == False:
                 told_user = True
                 print('Check @%s for a reply entry' % user)
 
@@ -87,6 +86,3 @@ def startTweeting():
                     w.writerow(done)
                 input("Press Enter to exit...")
                 sys.exit(0)
-
-if __name__ == '__main__':
-    startTweeting()
