@@ -88,9 +88,12 @@ def startTweeting():
         for user in twitters_to_rt:
             getNewestTweets(user, done)
         tweet_floor = randint(30, 80)
+        with open('done_list.csv', 'w', newline='') as file:
+            w = csv.writer(file)
+            w.writerow(done)
         wait_m = randint(30,70)
         print("Entered %s contests on run %s, now sleeping for %s minutes\
-            \nPress Ctrl+C to write finished tweets and exit" % (num_entered, run, wait_m))
+            \nPress Ctrl+C to exit" % (num_entered, run, wait_m))
         wait_s = 60 * wait_m
         for i in range(wait_s):
             try:
@@ -98,10 +101,6 @@ def startTweeting():
                 if i % 300 == 0 and not i == 0:
                     print("5 minutes passed")
             except KeyboardInterrupt as e:
-                os.remove('done_list.csv')
-                with open('done_list.csv', 'w', newline='') as file:
-                    w = csv.writer(file)
-                    w.writerow(done)
                 input("Press Enter to exit...")
                 go = False
 
