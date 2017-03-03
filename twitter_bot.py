@@ -15,6 +15,7 @@ auth.set_access_token(access_key, access_secret)
 api = tweepy.API(auth)
 
 twitters_to_rt = ["SkinDotTrade", "skinhub", "SteamAnalyst", "CSGO500", 
+    "CSGOatsecom", "Society_gg", "hellcasecom", "CSGOExclusive"]
 words_to_rt = ["giveaway", "contest", "enter", "rt"]
 blocked_words = ["thank", "winning", "congrats", "winner of"]
 
