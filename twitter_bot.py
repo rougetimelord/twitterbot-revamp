@@ -1,8 +1,10 @@
-import sys
 import tweepy
 import time
 import csv
+import os
 from random import randint
+from hashlib import sha256
+import datetime
 
 consumer_key = "<FILL IN>"
 consumer_secret = "<FILL IN>"
@@ -25,8 +27,14 @@ def retweet(id):
     fails = 0
     rand = randint(1,100)
     if rand >= tweet_floor:
-        api.update_status(status = str(int))
-        sleep(rand*5) 
+        seed = datetime.datetime.now().strftime('%Y%m%d_%H%M').encode('utf-8')
+        text = sha256(seed).hexdigest()
+        try:
+            api.update_status(status = text[:7])
+        except tweepy.TweepError as e:
+            print(e)
+        print('Waiting %s seconds' % rand * 2)
+        time.sleep(rand*2)
     while success  == False:
         try:
             r = api.retweet(id);
@@ -37,9 +45,9 @@ def retweet(id):
             fails += 1
             if fails >= 5 or e.api_code == 327:
                 print(e)
-                print("Really failed retweeting")
                 success = True
             time.sleep(10)
+    return
 
 def uni_norm(text):
     return text.translate({ 0x2018:0x27, 0x2019:0x27, 0x201C:0x22, 0x201D:0x22,
@@ -73,17 +81,17 @@ def startTweeting():
     print("Starting bot")
     run = 0
     while 1 >= 0:
+        run += 1
         print("Running run %s" % run)
         num_entered = 0
         for user in twitters_to_rt:
             getNewestTweets(user, done)
-        run += 1
         tweet_floor = randint(30, 80)
         wait_m = randint(30,70)
         print("Entered %s contests on run %s, now sleeping for %s minutes\
             \nPress Ctrl+C to write finished tweets and exit" % (num_entered, run, wait_m))
         wait_s = 60 * wait_m
-        for i in range(wait):
+        for i in range(wait_s):
             try:
                 time.sleep(1)
                 if i % 300 == 0 and not i == 0:
