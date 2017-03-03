@@ -15,7 +15,6 @@ auth.set_access_token(access_key, access_secret)
 api = tweepy.API(auth)
 
 twitters_to_rt = ["SkinDotTrade", "skinhub", "SteamAnalyst", "CSGO500", 
-    "CSGOatsecom", "Society_gg", "hellcasecom"]
 words_to_rt = ["giveaway", "contest", "enter", "rt"]
 blocked_words = ["thank", "winning", "congrats", "winner of"]
 
@@ -88,10 +87,12 @@ def startTweeting():
         for user in twitters_to_rt:
             getNewestTweets(user, done)
         tweet_floor = randint(30, 80)
+
         with open('done_list.csv', 'w', newline='') as file:
             w = csv.writer(file)
             w.writerow(done)
         wait_m = randint(30,70)
+
         print("Entered %s contests on run %s, now sleeping for %s minutes\
             \nPress Ctrl+C to exit" % (num_entered, run, wait_m))
         wait_s = 60 * wait_m
