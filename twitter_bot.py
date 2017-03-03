@@ -79,8 +79,9 @@ def startTweeting():
             done = temp[0]
 
     print("Starting bot")
-    run = 0
-    while 1 >= 0:
+    run = 0 
+    go = True
+    while go:
         run += 1
         print("Running run %s" % run)
         num_entered = 0
@@ -102,7 +103,7 @@ def startTweeting():
                     w = csv.writer(file)
                     w.writerow(done)
                 input("Press Enter to exit...")
-                sys.exit(0)
+                go = False
 
 if __name__ == '__main__':
     startTweeting()
