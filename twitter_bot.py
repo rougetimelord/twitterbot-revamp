@@ -2,6 +2,7 @@ import sys
 import tweepy
 import time
 import csv
+from random import randint
 
 consumer_key = "<FILL IN>"
 consumer_secret = "<FILL IN>"
@@ -17,10 +18,15 @@ words_to_rt = ["giveaway", "contest", "enter", "rt"]
 blocked_words = ["thank", "winning", "congrats", "winner of"]
 
 num_entered = 0
+tweet_floor = 70
 
 def retweet(id):
     success = False
     fails = 0
+    rand = randint(1,100)
+    if rand >= tweet_floor:
+        api.update_status(status = str(int))
+        sleep(rand*5) 
     while success  == False:
         try:
             r = api.retweet(id);
@@ -72,9 +78,12 @@ def startTweeting():
         for user in twitters_to_rt:
             getNewestTweets(user, done)
         run += 1
-        print("Entered %s contests on run %s, now sleeping for an hour \
-            \n Press Ctrl+C to write finished tweets and exit" % (num_entered, run))
-        for i in range(3600):
+        tweet_floor = randint(30, 80)
+        wait_m = randint(30,70)
+        print("Entered %s contests on run %s, now sleeping for %s minutes\
+            \nPress Ctrl+C to write finished tweets and exit" % (num_entered, run, wait_m))
+        wait_s = 60 * wait_m
+        for i in range(wait):
             try:
                 time.sleep(1)
                 if i % 300 == 0 and not i == 0:
@@ -86,3 +95,6 @@ def startTweeting():
                     w.writerow(done)
                 input("Press Enter to exit...")
                 sys.exit(0)
+
+if __name__ == '__main__':
+    startTweeting()
