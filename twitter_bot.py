@@ -51,7 +51,7 @@ def retweet(id, opt):
                 print(e)
                 success = True
             time.sleep(10)
-      if opt['tag']  or opt['url'] or opt['drake_aff']:
+    if not opt['user'] == '':
         msg = "@" + opt['user']
         if opt['tag']:
             msg += " " + twitters_to_tag[0] + " " + twitters_to_tag[1]
