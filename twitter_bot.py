@@ -19,8 +19,9 @@ twitters_to_rt = ["SkinDotTrade", "skinhub", "SteamAnalyst", "CSGO500",
     "DrakeMoon", "csgomassive", "CSGODerby", "skinupgg"]
 twitters_to_tag = ["@HannaBara", "@duredad"]
 trade_url = "https://steamcommunity.com/tradeoffer/new/?partner=126854537&token=7bID1Tq5"
+drake_aff = "https://www.drakemoon.com/promo-code/r0uge"
 words_to_rt = ["giveaway", "contest", "enter", "rt"]
-blocked_words = ["thank", "winning", "congrats", "winner of", "winners of", "profile url", "affi"]
+blocked_words = ["thank", "winning", "congrats", "winner of", "winners of", "profile url"]
 
 num_entered = 0
 tweet_floor = 70
@@ -52,10 +53,12 @@ def retweet(id, opt):
             time.sleep(10)
     if opt['tag'] == True or opt['url'] == True:
         msg = "@" + opt['user']
-        if opt['tag'] == True:
+        if opt['tag']:
             msg += " " + twitters_to_tag[0] + " " + twitters_to_tag[1]
-        if opt['url'] == True:
+        if opt['url']:
             msg += " " + trade_url
+        if opt['drake_aff']:
+            msg += " " + drake_aff
         try:
             api.update_status(status = msg, in_reply_to_status_id = id)
         except tweepy.TweepError as e:
@@ -68,22 +71,24 @@ def uni_norm(text):
 
 def getNewestTweets(user, done):
     tweets = []
-    for tweet in api.user_timeline(screen_name = user,count = 5,exclude_replies='true',include_rts='false'):
-        extras = {'user': "",'tag': False,'url': False}
+    for tweet in api.user_timeline(screen_name = user,count = 5,exclude_replies='true',include_rts='false',tweet_mode='extended'):
+        extras = {'user': "",'tag': False,'url': False,'drake_aff': False}
         tweet_id = tweet.id_str
         if tweet_id in done:
             continue
-        tweet_text = uni_norm(tweet.text).lower()
+        tweet_text = uni_norm(tweet.full_text).lower()
         done.append(tweet_id)
         if any(x in tweet_text for x in words_to_rt):   
             if any(y in tweet_text for y in blocked_words):
                 continue
-            if any(z in tweet_text for z in ['reply', 'tag', 'paste']):
+            if any(z in tweet_text for z in ['reply', 'tag', 'paste', 'affi']):
                 extras['user'] = user
                 if 'tag' in tweet_text:
                     extras['tag'] = True
                 if 'trade' in tweet_text:
                     extras['url'] = True
+                if 'affi' in tweet_text and user == "DrakeMoon":
+                    extras['drake_aff'] = True
             retweet(tweet_id, extras)
 
 def startTweeting():
