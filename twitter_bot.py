@@ -126,7 +126,7 @@ def startTweeting():
             w = csv.writer(file)
             w.writerow(done)
 
-        wait_m = randint(10,60)
+        wait_m = randint(10, 40)
         print("Entered %s contests on run %s, now sleeping for %s minutes\
             \nPress Ctrl+C to exit" % (num_entered, run, wait_m))
         wait_s = 60 * wait_m
