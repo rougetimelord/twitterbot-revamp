@@ -4,3 +4,4 @@ twitter_bot_filled.py
 *.pyproj
 *.csv
 key.py
+*.pyc

@@ -10,8 +10,8 @@ import datetime
 
 consumer_key = key.con_k()
 consumer_secret = key.con_s()
-access_token_key = key.acc_k()
-access_token_secret = key.acc_s()
+access_key = key.acc_k()
+access_secret = key.acc_s()
 auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(access_key, access_secret)
 api = tweepy.API(auth)
