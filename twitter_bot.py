@@ -30,15 +30,14 @@ def retweet(id, opt):
     fails = 0
     rand = randint(1,100)
     if rand >= tweet_floor:
-        seed = datetime.datetime.now().strftime('%Y%m%d_%H%M').encode('utf-8')
-        text = sha256(seed).hexdigest()
+        text = sha256(datetime.datetime.now().strftime('%Y:%m:%d_%H:%M:%S').encode('utf-8')).hexdigest()[:7]
         try:
-            api.update_status(status = text[:7])
+            api.update_status(text)
         except tweepy.TweepError as e:
             print(e)
         print('Waiting %s seconds' % (rand * 2))
         time.sleep(rand*2)
-    while success  == False:
+    while success == False:
         try:
             r = api.retweet(id)
             api.create_favorite(id)
@@ -82,7 +81,7 @@ def getNewestTweets(user, done):
                 extras['user'] = user
                 if 'tag' in tweet_text:
                     extras['tag'] = True
-                if 'trade url' in tweet_text:
+                if 'trade' in tweet_text:
                     extras['url'] = True
             retweet(tweet_id, extras)
 
@@ -104,8 +103,8 @@ def startTweeting():
         for user in twitters_to_rt:
             getNewestTweets(user, done)
         tweet_floor = randint(30, 80)
-        os.remove('done_list.csv')
 
+        os.remove('done_list.csv')
         with open('done_list.csv', 'w', newline='') as file:
             w = csv.writer(file)
             w.writerow(done)
@@ -120,7 +119,6 @@ def startTweeting():
                 if i % 300 == 0 and not i == 0:
                     print("5 minutes passed")
             except KeyboardInterrupt as e:
-                input("Press Enter to exit...")
                 go = False
 
 if __name__ == '__main__':
