@@ -97,6 +97,7 @@ def startTweeting():
     print("Starting bot")
     run = 0
     go = True
+    global num_entered
     while go:
         run += 1
         print("Running run %s" % run)
