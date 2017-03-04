@@ -41,9 +41,8 @@ def retweet(id, opt):
     while success  == False:
         try:
             r = api.retweet(id);
-            if r.retweeted == "True":
-                num_entered += 1
-                success = True
+            num_entered += 1
+            success = True
         except tweepy.TweepError as e:
             fails += 1
             if fails >= 5 or e.api_code == 327:
