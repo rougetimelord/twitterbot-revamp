@@ -19,7 +19,7 @@ api = tweepy.API(auth)
 twitters_to_rt = ["SkinDotTrade", "skinhub", "SteamAnalyst", "CSGO500", 
     "CSGOatsecom", "Society_gg", "hellcasecom", "CSGOExclusive", "earnggofficial",
     "DrakeMoon", "csgomassive", "CSGODerby", "skinupgg", "OzznyHD"]
-twitters_to_tag = ["@HannaBara", "@duredad", "@DarrenGuyaz"]
+twitters_to_tag = ["@HannaBara", "@duredad", "@DarrenGuyaz", "@Darnluxe", "@TiltedCS"]
 trade_url = "https://steamcommunity.com/tradeoffer/new/?partner=126854537&token=7bID1Tq5"
 drake_aff = "https://www.drakemoon.com/promo-code/r0uge"
 words_to_rt = ["giveaway", "contest", "enter", "rt"]
@@ -56,7 +56,7 @@ def retweet(id, opt):
     if not opt['user'] == '':
         msg = "@" + opt['user']
         if opt['tag']:
-            users = sample(len(twitters_to_tag), 2)
+            users = sample(range(len(twitters_to_tag)), 2)
             msg += " " + twitters_to_tag[users[0]] + " " + twitters_to_tag[users[1]]
         if opt['url']:
             msg += " " + trade_url
