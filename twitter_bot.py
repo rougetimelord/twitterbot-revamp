@@ -41,6 +41,7 @@ def retweet(id, opt):
         try:
             r = api.retweet(id)
             api.create_favorite(id)
+            global num_entered
             num_entered += 1
             success = True
         except tweepy.TweepError as e:
