@@ -2,7 +2,9 @@ import tweepy
 import time
 import csv
 import os
+import key
 from random import randint
+from random import sample
 from hashlib import sha256
 import datetime
 
@@ -54,7 +56,8 @@ def retweet(id, opt):
     if not opt['user'] == '':
         msg = "@" + opt['user']
         if opt['tag']:
-            msg += " " + twitters_to_tag[0] + " " + twitters_to_tag[1]
+            users = sample(len(twitters_to_tag), 2)
+            msg += " " + twitters_to_tag[users[0]] + " " + twitters_to_tag[users[1]]
         if opt['url']:
             msg += " " + trade_url
         if opt['drake_aff']:
