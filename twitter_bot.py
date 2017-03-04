@@ -51,7 +51,7 @@ def retweet(id, opt):
                 print(e)
                 success = True
             time.sleep(10)
-    if opt['tag'] == True or opt['url'] == True:
+      if opt['tag']  or opt['url'] or opt['drake_aff']:
         msg = "@" + opt['user']
         if opt['tag']:
             msg += " " + twitters_to_tag[0] + " " + twitters_to_tag[1]
@@ -78,7 +78,7 @@ def getNewestTweets(user, done):
             continue
         tweet_text = uni_norm(tweet.full_text).lower()
         done.append(tweet_id)
-        if any(x in tweet_text for x in words_to_rt):   
+        if any(x in tweet_text for x in words_to_rt):
             if any(y in tweet_text for y in blocked_words):
                 continue
             if any(z in tweet_text for z in ['reply', 'tag', 'paste', 'affi']):
@@ -92,7 +92,8 @@ def getNewestTweets(user, done):
             retweet(tweet_id, extras)
 
 def startTweeting():
-    print('Loading processed tweets')
+    print("Loading processed tweets")
+
     with open('done_list.csv', 'r') as f:
         reader = csv.reader(f)
         temp = list(reader)
@@ -110,6 +111,12 @@ def startTweeting():
         for user in twitters_to_rt:
             getNewestTweets(user, done)
         tweet_floor = randint(30, 80)
+
+        num_per_batch = len(twitters_to_rt) * 5
+        max_done = 5 * num_per_batch
+        if len(done) >= max_done:
+            print("Cleaning done_list")
+            done = done[num_per_batch:]
 
         os.remove('done_list.csv')
         with open('done_list.csv', 'w', newline='') as file:
