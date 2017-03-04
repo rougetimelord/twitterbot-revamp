@@ -40,7 +40,8 @@ def retweet(id, opt):
         time.sleep(rand*2)
     while success  == False:
         try:
-            r = api.retweet(id);
+            r = api.retweet(id)
+            api.create_favorite(id)
             num_entered += 1
             success = True
         except tweepy.TweepError as e:
