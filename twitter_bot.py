@@ -15,11 +15,12 @@ auth.set_access_token(access_key, access_secret)
 api = tweepy.API(auth)
 
 twitters_to_rt = ["SkinDotTrade", "skinhub", "SteamAnalyst", "CSGO500", 
-    "CSGOatsecom", "Society_gg", "hellcasecom", "CSGOExclusive", "earnggofficial"]
+    "CSGOatsecom", "Society_gg", "hellcasecom", "CSGOExclusive", "earnggofficial",
+    "DrakeMoon"]
 twitters_to_tag = ["@HannaBara", "@duredad"]
 trade_url = "https://steamcommunity.com/tradeoffer/new/?partner=126854537&token=7bID1Tq5"
 words_to_rt = ["giveaway", "contest", "enter", "rt"]
-blocked_words = ["thank", "winning", "congrats", "winner of", "winners of", "profile url"]
+blocked_words = ["thank", "winning", "congrats", "winner of", "winners of", "profile url", "affi"]
 
 num_entered = 0
 tweet_floor = 70
