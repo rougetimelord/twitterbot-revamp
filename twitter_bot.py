@@ -16,7 +16,7 @@ api = tweepy.API(auth)
 
 twitters_to_rt = ["SkinDotTrade", "skinhub", "SteamAnalyst", "CSGO500", 
     "CSGOatsecom", "Society_gg", "hellcasecom", "CSGOExclusive", "earnggofficial",
-    "DrakeMoon"]
+    "DrakeMoon", "csgomassive"]
 twitters_to_tag = ["@HannaBara", "@duredad"]
 trade_url = "https://steamcommunity.com/tradeoffer/new/?partner=126854537&token=7bID1Tq5"
 words_to_rt = ["giveaway", "contest", "enter", "rt"]
