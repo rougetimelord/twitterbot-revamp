@@ -16,13 +16,15 @@ api = tweepy.API(auth)
 
 twitters_to_rt = ["SkinDotTrade", "skinhub", "SteamAnalyst", "CSGO500", 
     "CSGOatsecom", "Society_gg", "hellcasecom", "CSGOExclusive"]
+twitters_to_tag = ["@HannaBara", "@duredad"]
+trade_url = "https://steamcommunity.com/tradeoffer/new/?partner=126854537&token=7bID1Tq5"
 words_to_rt = ["giveaway", "contest", "enter", "rt"]
-blocked_words = ["thank", "winning", "congrats", "winner of"]
+blocked_words = ["thank", "winning", "congrats", "winner of", "winners of", "profile url"]
 
 num_entered = 0
 tweet_floor = 70
 
-def retweet(id):
+def retweet(id, opt):
     success = False
     fails = 0
     rand = randint(1,100)
@@ -33,20 +35,30 @@ def retweet(id):
             api.update_status(status = text[:7])
         except tweepy.TweepError as e:
             print(e)
-        print('Waiting %s seconds' % rand * 2)
+        print('Waiting %s seconds' % (rand * 2))
         time.sleep(rand*2)
     while success  == False:
         try:
             r = api.retweet(id);
             if r.retweeted == "True":
-                success = True
                 num_entered += 1
+                success = True
         except tweepy.TweepError as e:
             fails += 1
             if fails >= 5 or e.api_code == 327:
                 print(e)
                 success = True
             time.sleep(10)
+    if opt['tag'] == True or opt['url'] == True:
+        msg = "@" + opt['user']
+        if opt['tag'] == True:
+            msg += " " + twitters_to_tag[0] + " " + twitters_to_tag[1]
+        if opt['url'] == True:
+            msg += " " + trade_url
+        try:
+            api.update_status(status = msg, in_reply_to_status_id = id)
+        except tweepy.TweepError as e:
+            print('Reply failed with %s' % e)
     return
 
 def uni_norm(text):
@@ -55,8 +67,8 @@ def uni_norm(text):
 
 def getNewestTweets(user, done):
     tweets = []
-    told_user = False
     for tweet in api.user_timeline(screen_name = user,count = 5,exclude_replies='true',include_rts='false'):
+        extras = {'user': "",'tag': False,'url': False}
         tweet_id = tweet.id_str
         if tweet_id in done:
             continue
@@ -65,10 +77,13 @@ def getNewestTweets(user, done):
         if any(x in tweet_text for x in words_to_rt):   
             if any(y in tweet_text for y in blocked_words):
                 continue
-            retweet(tweet_id)
-            if any(z in tweet_text for z in ['reply', 'tag']) and told_user == False:
-                told_user = True
-                print('Check @%s for a reply entry' % user)
+            if any(z in tweet_text for z in ['reply', 'tag', 'paste']):
+                extras['user'] = user
+                if 'tag' in tweet_text:
+                    extras['tag'] = True
+                if 'trade url' in tweet_text:
+                    extras['url'] = True
+            retweet(tweet_id, extras)
 
 def startTweeting():
     print('Loading processed tweets')
@@ -79,7 +94,7 @@ def startTweeting():
             done = temp[0]
 
     print("Starting bot")
-    run = 0 
+    run = 0
     go = True
     while go:
         run += 1
@@ -88,12 +103,13 @@ def startTweeting():
         for user in twitters_to_rt:
             getNewestTweets(user, done)
         tweet_floor = randint(30, 80)
+        os.remove('done_list.csv')
 
         with open('done_list.csv', 'w', newline='') as file:
             w = csv.writer(file)
             w.writerow(done)
-        wait_m = randint(30,70)
 
+        wait_m = randint(10,60)
         print("Entered %s contests on run %s, now sleeping for %s minutes\
             \nPress Ctrl+C to exit" % (num_entered, run, wait_m))
         wait_s = 60 * wait_m
