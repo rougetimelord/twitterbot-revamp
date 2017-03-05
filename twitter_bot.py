@@ -6,7 +6,7 @@ import key
 from random import randint
 from random import sample
 from hashlib import sha256
-import datetime
+from datetime import datetime
 
 consumer_key = key.con_k()
 consumer_secret = key.con_s()
@@ -16,14 +16,17 @@ auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(access_key, access_secret)
 api = tweepy.API(auth)
 
+print("Setting up key")
 twitters_to_rt = ["SkinDotTrade", "skinhub", "SteamAnalyst", "CSGO500", 
     "CSGOatsecom", "Society_gg", "hellcasecom", "CSGOExclusive", "earnggofficial",
-    "DrakeMoon", "csgomassive", "CSGODerby", "skinupgg", "OzznyHD"]
+    "DrakeMoon", "csgomassive", "CSGODerby", "skinupgg", "OzznyHD", "flashyflashycom",
+    "remesiskarlis", "RaffleTrade"]
 twitters_to_tag = ["@HannaBara", "@duredad", "@DarrenGuyaz", "@Darnluxe", "@TiltedCS"]
 trade_url = "https://steamcommunity.com/tradeoffer/new/?partner=126854537&token=7bID1Tq5"
 drake_aff = "https://www.drakemoon.com/promo-code/r0uge"
-words_to_rt = ["giveaway", "contest", "enter", "rt"]
-blocked_words = ["thank", "winning", "congrats", "winner of", "winners of", "profile url"]
+words_to_rt = ["giveaway", "contest", "enter", "rt", "luck"]
+special_words = ['reply', 'tag', 'trade', 'affi', 'sub']
+blocked_words = ["thank", "winning", "congrat", "winner of", "winners of", "profile url"]
 
 num_entered = 0
 tweet_floor = 70
@@ -33,7 +36,7 @@ def retweet(id, opt):
     fails = 0
     rand = randint(1,100)
     if rand >= tweet_floor:
-        text = sha256(datetime.datetime.now().strftime('%Y:%m:%d_%H:%M:%S').encode('utf-8')).hexdigest()[:7]
+        text = sha256(datetime.now().strftime('%Y:%m:%d_%H:%M:%S').encode('utf-8')).hexdigest()[:7]
         try:
             api.update_status(text)
         except tweepy.TweepError as e:
@@ -84,7 +87,7 @@ def getNewestTweets(user, done):
         if any(x in tweet_text for x in words_to_rt):
             if any(y in tweet_text for y in blocked_words):
                 continue
-            if any(z in tweet_text for z in ['reply', 'tag', 'paste', 'affi']):
+            if any(z in tweet_text for z in special_words):
                 extras['user'] = user
                 if 'tag' in tweet_text:
                     extras['tag'] = True
@@ -92,6 +95,8 @@ def getNewestTweets(user, done):
                     extras['url'] = True
                 if 'affi' in tweet_text and user == "DrakeMoon":
                     extras['drake_aff'] = True
+                if 'sub' in tweet_text:
+                    print("%s wants to get a subscriber" % user)
             retweet(tweet_id, extras)
 
 def startTweeting():
