@@ -20,13 +20,13 @@ print("Setting up key")
 twitters_to_rt = ["SkinDotTrade", "skinhub", "SteamAnalyst", "CSGO500", 
     "CSGOatsecom", "Society_gg", "hellcasecom", "CSGOExclusive", "earnggofficial",
     "DrakeMoon", "csgomassive", "CSGODerby", "skinupgg", "OzznyHD", "flashyflashycom",
-    "remesiskarlis", "RaffleTrade"]
+    "remesiskarlis", "RaffleTrade", "csgocasecom"]
 twitters_to_tag = ["@HannaBara", "@duredad", "@DarrenGuyaz", "@Darnluxe", "@TiltedCS"]
 trade_url = "https://steamcommunity.com/tradeoffer/new/?partner=126854537&token=7bID1Tq5"
 drake_aff = "https://www.drakemoon.com/promo-code/r0uge"
 words_to_rt = ["giveaway", "contest", "enter", "rt", "luck"]
 special_words = ['reply', 'tag', 'trade', 'affi', 'sub']
-blocked_words = ["thank", "winning", "congrat", "winner of", "winners of", "profile url"]
+blocked_words = ["thank", "winning", "congrat", "winner of", "winners of", "profile url", "vote"]
 
 num_entered = 0
 tweet_floor = 70
