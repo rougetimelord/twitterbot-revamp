@@ -3,6 +3,7 @@ import time
 import csv
 import os
 import key
+import re
 from random import randint
 from random import sample
 from hashlib import sha256
@@ -20,13 +21,14 @@ print("Setting up key")
 twitters_to_rt = ["SkinDotTrade", "skinhub", "SteamAnalyst", "CSGO500", 
     "CSGOatsecom", "Society_gg", "hellcasecom", "CSGOExclusive", "earnggofficial",
     "DrakeMoon", "csgomassive", "CSGODerby", "skinupgg", "OzznyHD", "flashyflashycom",
-    "remesiskarlis", "RaffleTrade", "csgocasecom", "CSGOFactory"]
+    "remesiskarlis", "RaffleTrade", "csgocasecom", "CSGOFactory", "SteamGems"]
 twitters_to_tag = ["@HannaBara", "@duredad", "@DarrenGuyaz", "@Darnluxe", "@TiltedCS"]
 trade_url = "https://steamcommunity.com/tradeoffer/new/?partner=126854537&token=7bID1Tq5"
 drake_aff = "https://www.drakemoon.com/promo-code/r0uge"
 words_to_rt = ["giveaway", "contest", "enter", "rt", "luck"]
-special_words = ['reply', 'tag', 'trade', 'affi', 'sub']
+special_words = ['reply', 'tag', 'trade', 'affi', 'sub', 'follow']
 blocked_words = ["thank", "winning", "congrat", "winner of", "winners of", "profile url", "vote", "won"]
+re_pat = r'(\w*@\w*)'
 
 num_entered = 0
 tweet_floor = 70
@@ -56,7 +58,7 @@ def retweet(id, opt):
                 print(e)
                 success = True
             time.sleep(10)
-    if not opt['user'] == '':
+    if any(entry == True for entry in opt.values()):
         msg = "@" + opt['user']
         if opt['tag']:
             users = sample(range(len(twitters_to_tag)), 2)
@@ -97,6 +99,13 @@ def getNewestTweets(user, done):
                     extras['drake_aff'] = True
                 if 'sub' in tweet_text:
                     print("%s wants to get a subscriber" % user)
+                if 'follow' in tweet_text:
+                    follow_list = re.findall(re_pat,tweet_text)
+                    for u in follow_list:
+                        try:
+                            api.create_friendship(id = u)
+                        except tweepy.TweepError as e:
+                            print(e)
             retweet(tweet_id, extras)
 
 def startTweeting():
