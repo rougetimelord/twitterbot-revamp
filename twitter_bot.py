@@ -26,7 +26,7 @@ trade_url = "https://steamcommunity.com/tradeoffer/new/?partner=126854537&token=
 drake_aff = "https://www.drakemoon.com/promo-code/r0uge"
 words_to_rt = ["giveaway", "contest", "enter", "rt", "luck"]
 special_words = ['reply', 'tag', 'trade', 'affi', 'sub']
-blocked_words = ["thank", "winning", "congrat", "winner of", "winners of", "profile url", "vote"]
+blocked_words = ["thank", "winning", "congrat", "winner of", "winners of", "profile url", "vote", "won"]
 
 num_entered = 0
 tweet_floor = 70
