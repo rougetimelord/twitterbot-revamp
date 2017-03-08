@@ -21,7 +21,7 @@ print("Setting up key")
 twitters_to_rt = ["SkinDotTrade", "skinhub", "SteamAnalyst", "CSGO500", 
     "CSGOatsecom", "Society_gg", "hellcasecom", "CSGOExclusive", "earnggofficial",
     "DrakeMoon", "csgomassive", "CSGODerby", "skinupgg", "OzznyHD", "flashyflashycom",
-    "KarlYTGiveaways", "RaffleTrade", "csgocasecom", "CSGOFactory", "SteamGems"]
+    "RaffleTrade", "csgocasecom", "CSGOFactory", "SteamGems"]
 twitters_to_tag = ["@HannaBara", "@duredad", "@DarrenGuyaz", "@Darnluxe", "@TiltedCS"]
 trade_url = "https://steamcommunity.com/tradeoffer/new/?partner=126854537&token=7bID1Tq5"
 drake_aff = "https://www.drakemoon.com/promo-code/r0uge"
@@ -71,6 +71,7 @@ def retweet(id, opt):
             api.update_status(status = msg, in_reply_to_status_id = id)
         except tweepy.TweepError as e:
             print('Reply failed with %s' % e)
+    time.sleep(randint(10,300))
     return
 
 def uni_norm(text):
@@ -140,7 +141,7 @@ def startTweeting():
             w = csv.writer(file)
             w.writerow(done)
 
-        wait_m = randint(10, 40)
+        wait_m = randint(20, 70)
         print("Entered %s contests on run %s, now sleeping for %s minutes\
             \nPress Ctrl+C to exit" % (num_entered, run, wait_m))
         wait_s = 60 * wait_m
