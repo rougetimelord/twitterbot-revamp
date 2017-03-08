@@ -21,7 +21,7 @@ print("Setting up key")
 twitters_to_rt = ["SkinDotTrade", "skinhub", "SteamAnalyst", "CSGO500", 
     "CSGOatsecom", "Society_gg", "hellcasecom", "CSGOExclusive", "earnggofficial",
     "DrakeMoon", "csgomassive", "CSGODerby", "skinupgg", "OzznyHD", "flashyflashycom",
-    "RaffleTrade", "csgocasecom", "CSGOFactory", "SteamGems"]
+    "RaffleTrade", "csgocasecom", "CSGOFactory", "SteamGems", "zevoCSGO"]
 twitters_to_tag = ["@HannaBara", "@duredad", "@DarrenGuyaz", "@Darnluxe", "@TiltedCS"]
 trade_url = "https://steamcommunity.com/tradeoffer/new/?partner=126854537&token=7bID1Tq5"
 drake_aff = "https://www.drakemoon.com/promo-code/r0uge"
