@@ -31,7 +31,7 @@ blocked_words = ["thank", "winning", "congrat", "dm", "profile url", "vote", "wo
 re_pat = r'(\w*@\w*)'
 
 num_entered = 0
-tweet_floor = 70
+tweet_floor = 50
 
 def retweet(id, opt):
     success = False
@@ -141,7 +141,7 @@ def startTweeting():
             w = csv.writer(file)
             w.writerow(done)
 
-        wait_m = randint(20, 70)
+        wait_m = randint(30, 50)
         print("Entered %s contests on run %s, now sleeping for %s minutes\
             \nPress Ctrl+C to exit" % (num_entered, run, wait_m))
         wait_s = 60 * wait_m
