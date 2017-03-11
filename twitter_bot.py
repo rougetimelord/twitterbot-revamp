@@ -27,7 +27,8 @@ twitters_to_rt = ["SkinDotTrade", "skinhub", "SteamAnalyst", "CSGO500",
                   "zevoCSGO", "Nick_CSGOOOO"]
 twitters_to_tag = ["@HannaBara", "@duredad",
                    "@DarrenGuyaz", "@Darnluxe", "@TiltedCS"]
-trade_url = "https://steamcommunity.com/tradeoffer/new/?partner=126854537&token=7bID1Tq5"
+trade_url = ("https://steamcommunity.com/tradeoffer/" +
+             "new/?partner=126854537&token=7bID1Tq5")
 drake_aff = "https://www.drakemoon.com/promo-code/r0uge"
 words_to_rt = ["giveaway", "contest", "enter", "rt", "luck"]
 special_words = ['reply', 'tag', 'trade', 'affi', 'sub', 'follow', 'like']
@@ -44,7 +45,8 @@ def retweet(id, opt):
     fails = 0
     rand = randint(1, 100)
     if rand >= tweet_floor:
-        text = "I got a hash of " + sha256(datetime.now().strftime('%Y:%m:%d_%H:%M:%S').encode('utf-8')).hexdigest()[:7]
+        text = ("I got a hash of " +
+                sha256(datetime.now().strftime('%Y:%m:%d_%H:%M:%S').encode('utf-8')).hexdigest()[:7])
         try:
             api.update_status(text)
         except tweepy.TweepError as e:
@@ -67,7 +69,9 @@ def retweet(id, opt):
         msg = "@" + opt['user']
         if opt['tag']:
             users = sample(range(len(twitters_to_tag)), 2)
-            msg += " " + twitters_to_tag[users[0]] + " " + twitters_to_tag[users[1]]
+            msg += (" " +
+                    twitters_to_tag[users[0]] + " " +
+                    twitters_to_tag[users[1]])
         if opt['url']:
             msg += " " + trade_url
         if opt['drake_aff']:
