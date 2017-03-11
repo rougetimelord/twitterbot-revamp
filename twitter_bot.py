@@ -18,37 +18,42 @@ auth.set_access_token(access_key, access_secret)
 api = tweepy.API(auth)
 
 print("Setting up key")
-twitters_to_rt = ["SkinDotTrade", "skinhub", "SteamAnalyst", "CSGO500", 
-    "CSGOatsecom", "Society_gg", "hellcasecom", "CSGOExclusive", "earnggofficial",
-    "DrakeMoon", "csgomassive", "CSGODerby", "skinupgg", "OzznyHD", "flashyflashycom",
-    "RaffleTrade", "csgocasecom", "CSGOFactory", "SteamGems", "zevoCSGO"]
-twitters_to_tag = ["@HannaBara", "@duredad", "@DarrenGuyaz", "@Darnluxe", "@TiltedCS"]
+twitters_to_rt = ["SkinDotTrade", "skinhub", "SteamAnalyst", "CSGO500",
+                  "CSGOatsecom", "Society_gg", "hellcasecom",
+                  "CSGOExclusive", "earnggofficial", "DrakeMoon",
+                  "csgomassive", "CSGODerby", "skinupgg",
+                  "OzznyHD", "flashyflashycom", "RaffleTrade",
+                  "csgocasecom", "CSGOFactory", "SteamGems",
+                  "zevoCSGO", "Nick_CSGOOOO"]
+twitters_to_tag = ["@HannaBara", "@duredad",
+                   "@DarrenGuyaz", "@Darnluxe", "@TiltedCS"]
 trade_url = "https://steamcommunity.com/tradeoffer/new/?partner=126854537&token=7bID1Tq5"
 drake_aff = "https://www.drakemoon.com/promo-code/r0uge"
 words_to_rt = ["giveaway", "contest", "enter", "rt", "luck"]
-special_words = ['reply', 'tag', 'trade', 'affi', 'sub', 'follow']
-blocked_words = ["thank", "winning", "congrat", "dm", "profile url", "vote", "won"]
+special_words = ['reply', 'tag', 'trade', 'affi', 'sub', 'follow', 'like']
+blocked_words = ["thank", "winning", "congrat",
+                 "dm", "profile url", "vote", "won"]
 re_pat = r'(\w*@\w*)'
 
 num_entered = 0
 tweet_floor = 50
 
+
 def retweet(id, opt):
     success = False
     fails = 0
-    rand = randint(1,100)
+    rand = randint(1, 100)
     if rand >= tweet_floor:
-        text = sha256(datetime.now().strftime('%Y:%m:%d_%H:%M:%S').encode('utf-8')).hexdigest()[:7]
+        text = "I got a hash of " + sha256(datetime.now().strftime('%Y:%m:%d_%H:%M:%S').encode('utf-8')).hexdigest()[:7]
         try:
             api.update_status(text)
         except tweepy.TweepError as e:
             print(e)
         print('Waiting %s seconds' % (rand * 2))
         time.sleep(rand*2)
-    while success == False:
+    while not success:
         try:
             r = api.retweet(id)
-            api.create_favorite(id)
             global num_entered
             num_entered += 1
             success = True
@@ -58,7 +63,7 @@ def retweet(id, opt):
                 print(e)
                 success = True
             time.sleep(10)
-    if any(entry == True for entry in opt.values()):
+    if any(entry for entry in opt.values()):
         msg = "@" + opt['user']
         if opt['tag']:
             users = sample(range(len(twitters_to_tag)), 2)
@@ -67,21 +72,35 @@ def retweet(id, opt):
             msg += " " + trade_url
         if opt['drake_aff']:
             msg += " " + drake_aff
+        if opt['like']:
+            api.create_favorite(id)
         try:
-            api.update_status(status = msg, in_reply_to_status_id = id)
+            api.update_status(status=msg, in_reply_to_status_id=id)
         except tweepy.TweepError as e:
             print('Reply failed with %s' % e)
-    time.sleep(randint(10,300))
+    wait = randint(10, 300)
+    print("Sitting for %s seconds" % wait)
+    time.sleep(wait)
     return
 
+
 def uni_norm(text):
-    return text.translate({ 0x2018:0x27, 0x2019:0x27, 0x201C:0x22, 0x201D:0x22,
-                            0xa0:0x20 })
+    return text.translate({0x2018:0x27, 0x2019:0x27, 0x201C:0x22, 0x201D:0x22,
+                          0xa0:0x20})
+
 
 def getNewestTweets(user, done):
-    tweets = []
-    for tweet in api.user_timeline(screen_name = user,count = 5,exclude_replies='true',include_rts='false',tweet_mode='extended'):
-        extras = {'user': "",'tag': False,'url': False,'drake_aff': False}
+    print("Scraping %s" % user)
+    try:
+        tweets = api.user_timeline(screen_name=user,
+                                   count=5, exclude_replies='true',
+                                   include_rts='false', tweet_mode='extended')
+    except tweepy.TweepError as e:
+        print(e)
+        return
+    for tweet in tweets:
+        extras = {'user': "", 'tag': False,
+                  'url': False, 'drake_aff': False, 'like': False}
         tweet_id = tweet.id_str
         if tweet_id in done:
             continue
@@ -101,13 +120,16 @@ def getNewestTweets(user, done):
                 if 'sub' in tweet_text:
                     print("%s wants to get a subscriber" % user)
                 if 'follow' in tweet_text:
-                    follow_list = re.findall(re_pat,tweet_text)
+                    follow_list = re.findall(re_pat, tweet_text)
                     for u in follow_list:
                         try:
-                            api.create_friendship(id = u)
+                            api.create_friendship(id=u)
                         except tweepy.TweepError as e:
                             print(e)
+                if 'like' in tweet_text:
+                    extras['like'] = True
             retweet(tweet_id, extras)
+
 
 def startTweeting():
     print("Loading processed tweets")
@@ -117,6 +139,8 @@ def startTweeting():
         temp = list(reader)
         if len(temp) > 0:
             done = temp[0]
+        else:
+            done = []
 
     print("Starting bot")
     run = 0
@@ -127,7 +151,9 @@ def startTweeting():
         print("Running run %s" % run)
         num_entered = 0
         for user in twitters_to_rt:
+            print("---------------------")
             getNewestTweets(user, done)
+            print("---------------------")
         tweet_floor = randint(30, 80)
 
         num_per_batch = len(twitters_to_rt) * 5
@@ -141,7 +167,7 @@ def startTweeting():
             w = csv.writer(file)
             w.writerow(done)
 
-        wait_m = randint(30, 50)
+        wait_m = randint(20, 70)
         print("Entered %s contests on run %s, now sleeping for %s minutes\
             \nPress Ctrl+C to exit" % (num_entered, run, wait_m))
         wait_s = 60 * wait_m
