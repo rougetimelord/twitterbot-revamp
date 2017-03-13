@@ -17,14 +17,14 @@ auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(access_key, access_secret)
 api = tweepy.API(auth)
 
-print("Setting up key")
-twitters_to_rt = ["SkinDotTrade", "skinhub", "SteamAnalyst", "CSGO500",
-                  "CSGOatsecom", "Society_gg", "hellcasecom",
-                  "CSGOExclusive", "earnggofficial", "DrakeMoon",
-                  "csgomassive", "CSGODerby", "skinupgg",
-                  "OzznyHD", "flashyflashycom", "RaffleTrade",
-                  "csgocasecom", "CSGOFactory", "SteamGems",
-                  "zevoCSGO", "Nick_CSGOOOO"]
+print('Setting up key')
+twitters_to_rt = ['SkinDotTrade', 'skinhub', 'SteamAnalyst', 'CSGO500',
+                  'CSGOatsecom', 'Society_gg', 'hellcasecom',
+                  'CSGOExclusive', 'earnggofficial', 'DrakeMoon',
+                  'csgomassive', 'CSGODerby', 'skinupgg',
+                  'OzznyHD', 'flashyflashycom', 'RaffleTrade',
+                  'csgocasecom', 'CSGOFactory', 'SteamGems',
+                  'zevoCSGO', 'Nick_CSGOOOO']
 twitters_to_tag = ["@HannaBara", "@duredad",
                    "@DarrenGuyaz", "@Darnluxe", "@TiltedCS"]
 trade_url = ("https://steamcommunity.com/tradeoffer/" +
@@ -77,7 +77,10 @@ def retweet(id, opt):
         if opt['drake_aff']:
             msg += " " + drake_aff
         if opt['like']:
-            api.create_favorite(id)
+            try:
+                api.create_favorite(id)
+            except tweepy.TweepError as e:
+                print('Like failed with %s' % e)
         try:
             api.update_status(status=msg, in_reply_to_status_id=id)
         except tweepy.TweepError as e:
