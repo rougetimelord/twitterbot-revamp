@@ -1,8 +1,7 @@
-### Twitter-bot
-##### Does something for some reason
+### Twitter-bot Revamp
+##### Automatically enter contests
 ---
-#### ONLY FOR EDUCATIONAL PURPOSES, AUTOMATING CALLS TO THE TWITTER API IS AGAINST THE TOS, I AM NOT RESPONSIBLE IF YOU RUN THIS CODE
-Open an issue to suggest twitters to be tracked
+#### AUTOMATING CALLS TO THE TWITTER API IS AGAINST THE TOS, I AM NOT RESPONSIBLE IF YOUR API KEY GETS BLOCKED
 
 #### Usage:
 * Fill in oauth stuff

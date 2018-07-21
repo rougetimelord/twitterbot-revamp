@@ -1,7 +1,4 @@
-*.sln
-twitter_bot_filled.py
-.vs/twitter-bot/v14/.suo
-*.pyproj
-*.csv
+*.json
 key.py
 *.pyc
+*.csv
