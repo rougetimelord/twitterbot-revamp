@@ -51,4 +51,4 @@ def retweet(API, DONE, Q):
     DONE[id] = True
     time.sleep(randint(30, 1800))
     Q.task_done()
-    return
+    return DONE

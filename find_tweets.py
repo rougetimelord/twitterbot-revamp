@@ -11,7 +11,7 @@ words_to_rt = ["giveaway", "contest", "enter", "rt", "luck"]
 special_words = ['reply', 'tag', 'trade', 'affi', 'sub', 'follow', 'like']
 blocked_words = ["thank", "winning", "congrat",
                  "dm", "profile url", "vote", "won"]
-re_pat = r'(\w*@\w*)'
+re_pat = r'((?<=@)|(?<=@ ))([\w]*)'
 
 def uni_norm(text):
     return text.translate({0x2018:0x27, 0x2019:0x27, 0x201C:0x22, 0x201D:0x22,
