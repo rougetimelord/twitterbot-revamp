@@ -19,7 +19,7 @@ def uni_norm(text):
                           0xa0:0x20})
 
 #Search user's timeline for tweets that we want
-def getNewestTweets(user, API, done, Q):
+def getNewestTweets(user, API, DONE, Q):
     print("----Scraping %s" % user, flush=True)
     #Try to get timeline
     try:
@@ -28,13 +28,13 @@ def getNewestTweets(user, API, done, Q):
                                    include_rts='false', tweet_mode='extended')
     except tweepy.TweepError as e:
         print('!---%s' % e, flush=True)
-        return done
+        return DONE
     #Check for extra features
     for tweet in tweets:
         extras = {'user': "", 'tag': False,
                   'url': False, 'drake_aff': False, 'like': False}
         tweet_id = tweet.id_str
-        if tweet_id in done:
+        if tweet_id in DONE.keys():
             continue
         tweet_text = uni_norm(tweet.full_text).lower()
         if any(x in tweet_text for x in words_to_rt):
@@ -57,11 +57,13 @@ def getNewestTweets(user, API, done, Q):
                             API.create_friendship(id=u)
                         except tweepy.TweepError as e:
                             print('!---%s' % e, flush=True)
+                            if e.api_code == 261:
+                                return DONE
                 if 'like' in tweet_text:
                     extras['like'] = True
-            done[tweet_id] = False
+            DONE[tweet_id] = (False, extras)
             Q.put((tweet_id, extras), True)
-    return done
+    return DONE
 
 #Go through all users and then search
 def getUserTweets(API, done, Q):

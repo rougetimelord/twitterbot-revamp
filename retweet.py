@@ -1,5 +1,5 @@
 '''Go through queue of retweets constantly'''
-import tweepy, time
+import tweepy
 from queue import Queue
 from random import randint, sample
 
@@ -16,18 +16,14 @@ def retweet(API, DONE, Q):
     id = tweet[0]
     opt = tweet[1]
     success = False
-    fails = 0
     #Try to rt until it works unless it's b&
     while not success:
         try:
             API.retweet(id)
             success = True
-        except tweepy.TweepError as e:
-            fails += 1
-            if fails >= 5 or e.api_code == 327 or e.api_code == 261:
-                print('!---%s' % e, flush=True)
-                return DONE
-            time.sleep(10)
+        except tweepy.TweepError as e:    
+            print('!---%s' % e, flush=True)
+            return DONE
     #Check for extra stuff and do it
     if any(entry for entry in opt.values()):
         msg = "@" + opt['user']
@@ -52,6 +48,6 @@ def retweet(API, DONE, Q):
         except tweepy.TweepError as e:
             print('!---Reply failed with %s' % e, flush=True)
     #Mark tweet as done then remove it from queue and exit thread
-    DONE[id] = True
+    DONE[id] = True 
     Q.task_done()
     return DONE

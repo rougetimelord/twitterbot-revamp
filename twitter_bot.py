@@ -19,53 +19,6 @@ API = tweepy.API(AUTH)
 Q = Queue()
 LOCK = threading.Lock()
 
-#Load done list and put not done items in the queue 
-print('!-Loading list of done tweets', flush=True)
-try:
-    with open('done.json', 'r') as f:
-            DONE = json.load(f)
-            for key, value in DONE.items():
-                if not value:
-                    Q.put((key, value))
-except IOError:
-    with open('done.json', 'w') as f:
-            DONE = {}
-
-def bot():
-    print('!-Bot started', flush=True)
-    #Make a feeder thread that runs constantly
-    f_thread = threading.Thread(group=None, target=feed_wrapper, name="Feed", args=(), kwargs={})
-    f_thread.start()
-    #Periodically check if there's enough tweets to spawn a pool of threads
-    C_threads = []
-    while(True):
-        if not Q.empty() and Q.unfinished_tasks >= 4:
-            print('--Spawning 4 retweet threads', flush=True)
-            for i in range(0, 4):
-                thread_obj = threading.Thread(target=consume_wrapper)
-                C_threads.append(thread_obj)
-                thread_obj.start()
-                print('!---Spawned thread %s' % i, flush=True)
-                sleep(randint(30, 1800))
-
-#Using wrappers is convenient because you don't need to pass args
-#in your thread call. The wrappers just call the functions and pass
-#variables (which are in scope for the wrapper, but not the function),
-#then dump the done list to disk.
-def feed_wrapper():
-    print('!-Feed thread spawned', flush=True)
-    global DONE
-    while True:
-        DONE = find_tweets.getUserTweets(API, DONE, Q)
-        sleep(300)
-        dumper()
-
-def consume_wrapper():
-    global DONE
-    DONE = retweet.retweet(API, DONE, Q)
-    dumper()
-    return
-
 #Dump to disk thread safely
 def dumper():
     LOCK.acquire()
@@ -77,6 +30,56 @@ def dumper():
     LOCK.release()
     return
 
+
+#Load done list and put not done items in the queue 
+print('!-Loading list of done tweets', flush=True)
+try:
+    with open('done.json', 'r') as f:
+            DONE = json.load(f)
+            for key, (status, opt) in DONE.items():
+                if not status:
+                    Q.put((key, opt))
+except IOError:
+    with open('done.json', 'w') as f:
+            DONE = {}
+    dumper()
+
+def bot():
+    print('!-Bot started', flush=True)
+    #Make a feeder thread that runs constantly
+    f_thread = threading.Thread(group=None, target=feed_wrapper, name="Feed", args=(), kwargs={})
+    f_thread.start()
+    #Periodically check if there's enough tweets to spawn a pool of threads
+    C_threads = []
+    while(True):
+        if not Q.empty() and Q.unfinished_tasks >= 4:
+            print('--Spawning %s retweet threads' % Q.unfinished_tasks, flush=True)
+            for i in range(0, Q.unfinished_tasks):
+                thread_obj = threading.Thread(target=consume_wrapper)
+                C_threads.append(thread_obj)
+                thread_obj.start()
+                print('!---Spawned thread %s' % str(i+1), flush=True)
+                thread_obj.join()
+                sleep(randint(10, 60))
+            sleep(randint(30, 500))
+
+#Using wrappers is convenient because you don't need to pass args
+#in your thread call. The wrappers just call the functions and pass
+#variables (which are in scope for the wrapper, but not the function),
+#then dump the done list to disk.
+def feed_wrapper():
+    print('!-Feed thread spawned', flush=True)
+    global DONE
+    while True:
+        DONE = find_tweets.getUserTweets(API, DONE, Q)
+        dumper()
+        sleep(300)
+
+def consume_wrapper():
+    global DONE
+    DONE = retweet.retweet(API, DONE, Q)
+    dumper()
+    return
 
 if __name__ == '__main__':
     bot()
