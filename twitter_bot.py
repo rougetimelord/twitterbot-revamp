@@ -6,7 +6,7 @@ from time import sleep
 from random import randint
 
 #set up API
-print('Setting up key')
+print('!-Setting up key')
 consumer_key = key.con_k()
 consumer_secret = key.con_s()
 access_key = key.acc_k()
@@ -19,17 +19,16 @@ API = tweepy.API(AUTH)
 Q = Queue()
 LOCK = threading.Lock()
 
-print('Loading list of done tweets')
+print('!-Loading list of done tweets')
 try:
     with open('done.json', 'r') as f:
             DONE = json.load(f)
 except IOError:
     with open('done.json', 'w') as f:
             DONE = {}
-print("Loaded done tweets")
 
 def bot():
-    print('Bot started')
+    print('!-Bot started')
     #Make a feeder thread that runs constantly
     f_thread = threading.Thread(group=None, target=feed_wrapper, name="Feed", args=(), kwargs={})
     f_thread.start()
@@ -37,12 +36,12 @@ def bot():
     C_threads = []
     while(True):
         if not Q.empty and Q.qsize >= 4:
-            print('Spawning 4 retweet threads')
+            print('--Spawning 4 retweet threads')
             for i in range(0, 4):
                 thread_obj = threading.Thread(target=consume_wrapper)
                 C_threads.append(thread_obj)
                 thread_obj.start()
-                print('--Spawned thread %s' % i)
+                print('!---Spawned thread %s' % i)
                 sleep(randint(30, 1800))
 
 #Using wrappers is convenient because you don't need to pass args
@@ -50,7 +49,7 @@ def bot():
 #variables (which are in scope for the wrapper, but not the function),
 #then dump the done list to disk.
 def feed_wrapper():
-    print('Feed thread spawned')
+    print('!-Feed thread spawned')
     global DONE
     while True:
         DONE = find_tweets.getUserTweets(API, DONE, Q)

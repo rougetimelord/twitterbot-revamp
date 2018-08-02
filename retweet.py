@@ -25,7 +25,7 @@ def retweet(API, DONE, Q):
         except tweepy.TweepError as e:
             fails += 1
             if fails >= 5 or e.api_code == 327 or e.api_code == 403:
-                print(e)
+                print('!---%s' % e)
                 return DONE
             time.sleep(10)
     #Check for extra stuff and do it
@@ -45,12 +45,12 @@ def retweet(API, DONE, Q):
             try:
                 API.create_favorite(id)
             except tweepy.TweepError as e:
-                print('Like failed with %s' % e)
+                print('!---Like failed with %s' % e)
         #Try to post reply
         try:
             API.update_status(status=msg, in_reply_to_status_id=id)
         except tweepy.TweepError as e:
-            print('Reply failed with %s' % e)
+            print('!---Reply failed with %s' % e)
     #Mark tweet as done then remove it from queue and exit thread
     DONE[id] = True
     Q.task_done()
