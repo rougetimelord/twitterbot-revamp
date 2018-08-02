@@ -1,6 +1,5 @@
 '''Find new tweets and append them to the  queue'''
-import tweepy
-import re
+import tweepy, re
 from queue import Queue
 
 #Tweet variables
