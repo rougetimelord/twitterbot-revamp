@@ -1,40 +1,42 @@
 '''Go through queue of retweets constantly'''
-import tweepy
-import re
-import time
+import tweepy, time
 from queue import Queue
 from random import randint, sample
 
+#Variables for special actions
 twitters_to_tag = ["@HannaBara", "@duredad",
                    "@DarrenGuyaz", "@Darnluxe", "@TiltedCS"]
-trade_url = ("https://steamcommunity.com/tradeoffer/" +
-             "new/?partner=126854537&token=7bID1Tq5")
-drake_aff = "https://www.drakemoon.com/promo-code/r0uge"
+trade_url = ("xxxxxxxxxxxxxxxxxxxxxxx" +
+             "xxxxxxxxxxxxxxxxxxxxxxx")
+drake_aff = "xxxxxxxxxxxxxxxxxxxxxxx"
+
 def retweet(API, DONE, Q):
+    #Get a tweet from the shared queue and retweet
     tweet = Q.get(True)
     id = tweet[0]
     opt = tweet[1]
     success = False
     fails = 0
+    #Try to rt until it works unless it's b&
     while not success:
         try:
             API.retweet(id)
             success = True
         except tweepy.TweepError as e:
             fails += 1
-            if fails >= 5 or e.api_code == 327:
+            if fails >= 5 or e.api_code == 327 or e.api_code == 403:
                 print(e)
-                success = True
+                return DONE
             time.sleep(10)
+    #Check for extra stuff and do it
     if any(entry for entry in opt.values()):
         msg = "@" + opt['user']
         if opt['tag']:
+            #Make a sample and get users from the users list
             users = sample(range(len(twitters_to_tag)), 2)
-            a = int(users[0])
-            b = int(users[1])
             msg += (" " +
-                    twitters_to_tag[a] + " " +
-                    twitters_to_tag[b])
+                    twitters_to_tag[int(users[0])] + " " +
+                    twitters_to_tag[int(users[1])])
         if opt['url']:
             msg += " " + trade_url
         if opt['drake_aff']:
@@ -44,11 +46,12 @@ def retweet(API, DONE, Q):
                 API.create_favorite(id)
             except tweepy.TweepError as e:
                 print('Like failed with %s' % e)
+        #Try to post reply
         try:
             API.update_status(status=msg, in_reply_to_status_id=id)
         except tweepy.TweepError as e:
             print('Reply failed with %s' % e)
+    #Mark tweet as done then remove it from queue and exit thread
     DONE[id] = True
-    time.sleep(randint(30, 1800))
     Q.task_done()
     return DONE

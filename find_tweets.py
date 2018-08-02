@@ -3,6 +3,7 @@ import tweepy
 import re
 from queue import Queue
 
+#Tweet variables
 twitters_to_rt = ['skinhub', 'SteamAnalyst', 'CSGO500',
                   'CSGOatsecom', 'Society_gg', 'hellcasecom',
                   'CSGOExclusive', 'earnggofficial', 'DrakeMoon',
@@ -13,13 +14,15 @@ blocked_words = ["thank", "winning", "congrat",
                  "dm", "profile url", "vote", "won"]
 re_pat = r'((?<=@)|(?<=@ ))([\w]*)'
 
+#Normalize unicode
 def uni_norm(text):
     return text.translate({0x2018:0x27, 0x2019:0x27, 0x201C:0x22, 0x201D:0x22,
                           0xa0:0x20})
 
-
+#Search user's timeline for tweets that we want
 def getNewestTweets(user, API, done, Q):
     print("Scraping %s" % user)
+    #Try to get timeline
     try:
         tweets = API.user_timeline(screen_name=user,
                                    count=5, exclude_replies='true',
@@ -27,6 +30,7 @@ def getNewestTweets(user, API, done, Q):
     except tweepy.TweepError as e:
         print(e)
         return done
+    #Check for extra features
     for tweet in tweets:
         extras = {'user': "", 'tag': False,
                   'url': False, 'drake_aff': False, 'like': False}
@@ -60,9 +64,8 @@ def getNewestTweets(user, API, done, Q):
             Q.put((tweet_id, extras), True)
     return done
 
+#Go through all users and then search
 def getUserTweets(API, done, Q):
     for user in twitters_to_rt:
-            print("---------------------")
-            done = getNewestTweets(user, API, done, Q)
-            print("---------------------")
+        done = getNewestTweets(user, API, done, Q)
     return done
