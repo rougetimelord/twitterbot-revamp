@@ -1,13 +1,10 @@
 ### Twitter-bot Revamp
 ##### Automatically enter contests
 ---
-#### AUTOMATING CALLS TO THE TWITTER API IS AGAINST THE TOS, I AM NOT RESPONSIBLE IF YOUR API KEY GETS BLOCKED
+#### AUTOMATING CALLS TO THE TWITTER API IS AGAINST THE TOS, I AM NOT RESPONSIBLE IF YOUR API KEY GETS BLOCKED, YOUR TWITTER ACCOUNT IS SUSPENDED OR ANY OTHER ACTION THAT TWITTER TAKES AGAINST YOU
 
 #### Usage:
-* Fill in oauth stuff
-* Clear done_list.csv
-* You might want to change trade url (unless you want to give me skins for writing the bot :wink: )
-* R-r-r-run that shit
+* Fill in oauth stuff in key.py (I'm sure you can figure out what variables you need)
 
 #### Requirements:
-* tweepy, just run ```pip install tweepy```
+* tweepy, ```pip install tweepy```
