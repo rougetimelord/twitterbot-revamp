@@ -22,7 +22,7 @@ def retweet(API, DONE, Q):
             API.retweet(id)
             success = True
         except tweepy.TweepError as e:    
-            print('!---%s' % e, flush=True)
+            print('*---%s' % e, flush=True)
             return DONE
     #Check for extra stuff and do it
     if any(entry for entry in opt.values()):
@@ -41,12 +41,12 @@ def retweet(API, DONE, Q):
             try:
                 API.create_favorite(id)
             except tweepy.TweepError as e:
-                print('!---Like failed with %s' % e, flush=True)
+                print('*---Like failed with %s' % e, flush=True)
         #Try to post reply
         try:
             API.update_status(status=msg, in_reply_to_status_id=id)
         except tweepy.TweepError as e:
-            print('!---Reply failed with %s' % e, flush=True)
+            print('*---Reply failed with %s' % e, flush=True)
     #Mark tweet as done then remove it from queue and exit thread
     DONE[id] = True 
     Q.task_done()

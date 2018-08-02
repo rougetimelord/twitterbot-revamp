@@ -27,7 +27,7 @@ def getNewestTweets(user, API, DONE, Q):
                                    count=5, exclude_replies='true',
                                    include_rts='false', tweet_mode='extended')
     except tweepy.TweepError as e:
-        print('!---%s' % e, flush=True)
+        print('*---%s' % e, flush=True)
         return DONE
     #Check for extra features
     for tweet in tweets:
@@ -56,7 +56,7 @@ def getNewestTweets(user, API, DONE, Q):
                         try:
                             API.create_friendship(id=u)
                         except tweepy.TweepError as e:
-                            print('!---%s' % e, flush=True)
+                            print('*---%s' % e, flush=True)
                             if e.api_code == 261:
                                 return DONE
                 if 'like' in tweet_text:
